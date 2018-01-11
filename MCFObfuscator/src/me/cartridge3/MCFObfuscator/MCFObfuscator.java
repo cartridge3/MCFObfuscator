@@ -25,6 +25,8 @@ public class MCFObfuscator {
 	protected static final String OBJECTIVES = PATH + "obs.txt";
 	protected static final String OUT = PATH + "testOBF.mcfunction";
 	
+	
+	protected static final String PREFIX = "";
 	protected static final String SUFFIX = ".mcfunction";
 	
 	protected static int charat = 0;
@@ -46,9 +48,7 @@ public class MCFObfuscator {
 
 		List<String> obfCommands = obfuscate(commands);
 
-		for (int i = 0; i < obfCommands.size(); i++) {
-			LOGGER.log(obfCommands.get(i));
-		}
+		LOGGER.log("Done");
 
 	}
 
@@ -90,7 +90,7 @@ public class MCFObfuscator {
 
 				try {
 					if (newFile != null)
-						Files.write(Paths.get(newFile.getAbsolutePath()), ("\nfunction " + nextFileName).getBytes(),
+						Files.write(Paths.get(newFile.getAbsolutePath()), ("\nfunction " + PREFIX + nextFileName).getBytes(),
 								StandardOpenOption.APPEND);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -108,7 +108,9 @@ public class MCFObfuscator {
 			}
 
 			try {
-				Files.write(Paths.get(newFile.getAbsolutePath()), (commands.get(i) + "\n").getBytes(),
+				Files.write(Paths.get(newFile.getAbsolutePath()), (commands.get(i)).getBytes(),
+						StandardOpenOption.APPEND);
+				Files.write(Paths.get(newFile.getAbsolutePath()), (System.lineSeparator().getBytes()),
 						StandardOpenOption.APPEND);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
