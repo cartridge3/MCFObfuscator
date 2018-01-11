@@ -19,14 +19,16 @@ public class MCFObfuscator {
 
 	protected static final Parser PARSER = new Parser();
 	protected static final Logger LOGGER = new Logger();
+
 	protected static final String PATH = "C:/Users/" + System.getProperty("user.name")
-			+ "/git/MCFObfuscator/MCFObfuscator/src/me/cartridge3/MCFObfuscator/";
-	protected static final String IN = PATH + "test.mcfunction";
-	protected static final String OBJECTIVES = PATH + "obs.txt";
-	protected static final String OUT = PATH + "testOBF.mcfunction";
+	+ "/git/MCFObfuscator/MCFObfuscator/src/me/cartridge3/MCFObfuscator/";
+	
+	protected static String IN = "";
+	protected static String OBJECTIVES = "";
+	protected static  String OUT =  "";
 	
 	
-	protected static final String PREFIX = "";
+	protected static String PREFIX = "";
 	protected static final String SUFFIX = ".mcfunction";
 	
 	protected static int charat = 0;
@@ -35,7 +37,7 @@ public class MCFObfuscator {
 	// <String,ObfuscatedString>
 	protected static HashMap<String, String> objectivesMap = new HashMap<>();
 
-	public static void main(String[] args) {
+	public static void start() {
 
 		LOGGER.log("Starting up...");
 		LOGGER.log("Reading objectives...");
@@ -97,7 +99,7 @@ public class MCFObfuscator {
 					e.printStackTrace();
 				}
 
-				newFile = new File(PATH + nextFileName + SUFFIX);
+				newFile = new File(OUT + nextFileName.replaceAll(PREFIX, "") + SUFFIX);
 				try {
 					newFile.createNewFile();
 				} catch (IOException e) {
@@ -119,6 +121,10 @@ public class MCFObfuscator {
 
 		}
 
+		
+		
+		
+		
 		return commands;
 
 	}
