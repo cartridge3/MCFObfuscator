@@ -21,7 +21,9 @@ public class Parser {
 
 			while ((line = br.readLine()) != null) {
 
+				if(!line.isEmpty()) {
 				cmds.add(line);
+				}
 
 			}
 		} catch (FileNotFoundException e) {

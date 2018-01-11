@@ -1,10 +1,15 @@
 package me.cartridge3.MCFObfuscator;
 
 import java.io.BufferedReader;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +24,12 @@ public class MCFObfuscator {
 	protected static final String IN = PATH + "test.mcfunction";
 	protected static final String OBJECTIVES = PATH + "obs.txt";
 	protected static final String OUT = PATH + "testOBF.mcfunction";
-
+	
+	protected static final String SUFFIX = ".mcfunction";
+	
+	protected static int charat = 0;
+	protected static int charsave = -1;
+	protected static String appendChar = "";
 	// <String,ObfuscatedString>
 	protected static HashMap<String, String> objectivesMap = new HashMap<>();
 
@@ -46,9 +56,9 @@ public class MCFObfuscator {
 
 		int commandCount = commands.size();
 
-		List<String> objectives = convertObjectives(OBJECTIVES);
-
 		LOGGER.log("Obfuscating objective names");
+
+		List<String> objectives = convertObjectives(OBJECTIVES);
 
 		for (int i = 0; i < objectives.size(); i++) {
 
@@ -65,6 +75,46 @@ public class MCFObfuscator {
 
 				}
 			}
+		}
+
+		LOGGER.log("Confusing flow of control");
+
+		File newFile = null;
+		String nextFileName = generateRandomFileName();
+		int fileCountNewFile = 0;
+
+		for (int i = 0; i < commandCount; i++) {
+
+			if (i == fileCountNewFile) {
+				fileCountNewFile = fileCountNewFile  + 1;
+
+				try {
+					if (newFile != null)
+						Files.write(Paths.get(newFile.getAbsolutePath()), ("\nfunction " + nextFileName).getBytes(),
+								StandardOpenOption.APPEND);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				newFile = new File(PATH + nextFileName + SUFFIX);
+				try {
+					newFile.createNewFile();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				nextFileName = generateRandomFileName();
+			}
+
+			try {
+				Files.write(Paths.get(newFile.getAbsolutePath()), (commands.get(i) + "\n").getBytes(),
+						StandardOpenOption.APPEND);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		}
 
 		return commands;
@@ -108,6 +158,36 @@ public class MCFObfuscator {
 
 		return sb.toString();
 
+	}
+	
+	public static String generateRandomFileName() {
+		String charsUp = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		String charsDown = "abcdefghijklmnopqrstuvwxyz";
+		
+		String filename ="";
+		if(charsUp.length()==charat) {
+			charsave++;
+			appendChar = appendChar + charsUp.charAt(charsave);
+			charat = 0;
+			filename = appendChar + charsDown.charAt(charat);
+		} else {
+			
+			
+			if(appendChar.isEmpty()) {
+			
+		filename = String.valueOf(charsUp.charAt(charat));
+			} else {
+				filename = appendChar + charsDown.charAt(charat);
+			}
+		}
+		
+		
+		charat++;
+		
+		return filename;
+	
+		
+		
 	}
 
 }
