@@ -29,6 +29,9 @@ public class MCFObfuscator {
 
 	protected static String PREFIX = "";
 	protected static final String SUFFIX = ".mcfunction";
+	
+	protected static int CONFIG_MINAMOUNT = 1;
+	protected static int CONFIG_MAXAMOUNT = 7;
 
 	protected static int charat = 0;
 	protected static int charsave = -1;
@@ -104,7 +107,7 @@ public class MCFObfuscator {
 		for (int i = 0; i < commandCount; i++) {
 
 			if (i == fileCountNewFile) {
-				fileCountNewFile = fileCountNewFile + r.nextInt(20) + 10;
+				fileCountNewFile = fileCountNewFile + r.nextInt(CONFIG_MAXAMOUNT-CONFIG_MINAMOUNT) + CONFIG_MINAMOUNT;
 
 				try {
 					if (newFile != null)
