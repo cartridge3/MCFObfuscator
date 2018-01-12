@@ -63,7 +63,7 @@ public class MCFObfuscator {
 		List<String> uselessObjectives = new ArrayList<String>();
 		for (int i = 0; i < objectives.size(); i++) {
 
-			objectivesMap.put(objectives.get(i), generateRandomString(6));
+			objectivesMap.put(objectives.get(i), generateRandomString(1, 6));
 
 		}
 
@@ -85,7 +85,7 @@ public class MCFObfuscator {
 
 		for (int i = 0; i < uselessObjectivesCount; i++) {
 
-			objectivesMap.put("Useless" + i, generateRandomString(6));
+			objectivesMap.put("Useless" + i, generateRandomString(1, 6));
 			uselessObjectives.add(objectivesMap.get("Useless" + i));
 
 		}
@@ -137,7 +137,7 @@ public class MCFObfuscator {
 							+ "_min=1] " + uselessObjectives.get(anotherRandomObjective) + " " + randomNumber;
 					break;
 				case 1:
-					cmdToAppend = "scoreboard players set @a[score_" + uselessObjectives.get(randomObjective) + "=1]"
+					cmdToAppend = "scoreboard players set @a[score_" + uselessObjectives.get(randomObjective) + "=1] "
 							+ uselessObjectives.get(anotherRandomObjective) + " " + randomNumber;
 					break;
 				case 2:
@@ -154,16 +154,16 @@ public class MCFObfuscator {
 							+ "_min=1] " + uselessObjectives.get(anotherRandomObjective);
 					break;
 				case 5:
-					cmdToAppend = "scoreboard players reset @a[score_" + uselessObjectives.get(randomObjective) + "=1] "
+					cmdToAppend = "scoreboard players reset @a[score_" + "_min=" + r.nextInt(30) + "=1] "
 							+ uselessObjectives.get(anotherRandomObjective);
 					break;
 				case 6:
 					cmdToAppend = "scoreboard players reset @a[score_" + uselessObjectives.get(randomObjective)
-							+ "_min=" + uselessObjectives.get(anotherRandomObjective) + "]";
+							+ "_min=" + r.nextInt(30) + "]";
 					break;
 				case 7:
 					cmdToAppend = "scoreboard players reset @a[score_" + uselessObjectives.get(randomObjective) + "="
-							+ uselessObjectives.get(anotherRandomObjective) + "]";
+							+ r.nextInt(30) + "]";
 					break;
 
 				case 8:
@@ -171,7 +171,7 @@ public class MCFObfuscator {
 							+ "_min=1] " + uselessObjectives.get(anotherRandomObjective) + " " + randomNumber;
 					break;
 				case 9:
-					cmdToAppend = "scoreboard players set @e[score_" + uselessObjectives.get(randomObjective) + "=1]"
+					cmdToAppend = "scoreboard players set @e[score_" + uselessObjectives.get(randomObjective) + "=1] "
 							+ uselessObjectives.get(anotherRandomObjective) + " " + randomNumber;
 					break;
 				case 10:
@@ -205,7 +205,7 @@ public class MCFObfuscator {
 							+ "_min=1] " + uselessObjectives.get(anotherRandomObjective) + " " + anotherRandomNumber;
 					break;
 				case 17:
-					cmdToAppend = "scoreboard players set @a[score_" + uselessObjectives.get(randomObjective) + "=1]"
+					cmdToAppend = "scoreboard players set @a[score_" + uselessObjectives.get(randomObjective) + "=1] "
 							+ uselessObjectives.get(anotherRandomObjective) + " " + anotherRandomNumber;
 					break;
 				case 18:
@@ -316,26 +316,56 @@ public class MCFObfuscator {
 
 	}
 
-	public static String generateRandomString(int length) {
-		String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+
+	public static String generateRandomString(int mode, int length) {
+		String st = "";
+
 		StringBuilder sb = new StringBuilder();
 		Random r = new Random();
+		if (mode == 0) {
+			String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
 
-		for (int i = 0; i < length; i++) {
-			sb.append(chars.charAt(r.nextInt(chars.length())));
+			for (int i = 0; i < length; i++) {
+				sb.append(chars.charAt(r.nextInt(chars.length())));
+			}
+
+			st = sb.toString();
+
+		} else {
+
+			for (int i = 0; i <= 16; i++) {
+				if (r.nextBoolean()) {
+					sb.append("I");
+				} else {
+					sb.append("l");
+				}
+			}
+
+			List<String> ranObs = new ArrayList<String>();
+
+			for (String key : objectivesMap.keySet()) {
+				ranObs.add(key);
+			}
+			if (ranObs.contains(sb.toString())) {
+				generateRandomString(1, 0);
+			}
+			
+			
+
+			st = sb.toString();
+
 		}
 
-		LOGGER.log(sb.toString());
-
-		return sb.toString();
+		return st;
 
 	}
 
 	public static String generateRandomFileName() {
+		String filename = "";
+
 		String charsUp = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		String charsDown = "abcdefghijklmnopqrstuvwxyz";
 
-		String filename = "";
 		if (charsUp.length() == charat) {
 			charsave++;
 			appendChar = appendChar + charsUp.charAt(charsave);
