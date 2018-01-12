@@ -35,7 +35,7 @@ public class MCFObfuscator {
 	protected static String appendChar = "";
 	// <String,ObfuscatedString>
 	protected static HashMap<String, String> objectivesMap = new HashMap<>();
-
+	protected static List<String> commandList = new ArrayList<String>();
 	public static void start() {
 
 		LOGGER.log("Starting up...");
@@ -90,6 +90,10 @@ public class MCFObfuscator {
 
 		}
 
+		
+	
+		
+		
 		LOGGER.log("Confusing flow of control");
 
 		File newFile = null;
@@ -100,7 +104,7 @@ public class MCFObfuscator {
 		for (int i = 0; i < commandCount; i++) {
 
 			if (i == fileCountNewFile) {
-				fileCountNewFile = fileCountNewFile + r.nextInt(7) + 1;
+				fileCountNewFile = fileCountNewFile + r.nextInt(20) + 10;
 
 				try {
 					if (newFile != null)
