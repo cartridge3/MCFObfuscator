@@ -23,8 +23,7 @@ public class MCFObfuscator {
 	
 	protected static final String VERSION = "1.0";
 
-	protected static final String PATH = "C:/Users/" + System.getProperty("user.name")
-			+ "/git/MCFObfuscator/MCFObfuscator/src/me/cartridge3/MCFObfuscator/";
+	
 
 	protected static String IN = "";
 	protected static String OBJECTIVES = "";
@@ -386,7 +385,7 @@ public class MCFObfuscator {
 
 		} else {
 
-			for (int i = 0; i <= 16; i++) {
+			for (int i = 0; i <= 14; i++) {
 				if (r.nextBoolean()) {
 					sb.append("I");
 				} else {
