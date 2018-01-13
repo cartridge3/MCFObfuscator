@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
@@ -15,8 +16,14 @@ import javax.swing.JFileChooser;
 
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Scanner;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
+import java.awt.ScrollPane;
+
 import javax.swing.JSeparator;
 import java.awt.Component;
 import javax.swing.Box;
@@ -29,6 +36,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.ImageIcon;
 import javax.swing.JTextArea;
 import java.awt.SystemColor;
+import java.awt.TextArea;
+
 import javax.swing.JScrollPane;
 
 public class GUIMain extends JFrame {
@@ -45,7 +54,7 @@ public class GUIMain extends JFrame {
 	private JLabel lblOutputFolder;
 	private JButton button;
 	private JButton button_1;
-	private static JTextArea textArea = new JTextArea();
+	static TextArea textArea = new TextArea("", 9, 60, TextArea.SCROLLBARS_VERTICAL_ONLY);
 
 	/**
 	 * Launch the application.
@@ -150,12 +159,12 @@ public class GUIMain extends JFrame {
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				 JFileChooser filec = new JFileChooser();
-				 filec.setCurrentDirectory(new File(MCFObfuscator.PATH));
-				 filec.setDialogTitle("Choose .mcfunction file");
+				 
+				 filec.setDialogTitle("Choose main .mcfunction file");
 				 FileFilter filter = new FileNameExtensionFilter("mcfunction", 
 				            "mcfunction"); 
 				 filec.setFileFilter(filter);
-				  filec.setCurrentDirectory(new File(textField.getText()));
+				
 				 
 				 int val = filec.showOpenDialog(null);
 					// int returnValue = jfc.showSaveDialog(null);
@@ -176,9 +185,9 @@ public class GUIMain extends JFrame {
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				 JFileChooser filec = new JFileChooser();
-				 filec.setCurrentDirectory(new File(MCFObfuscator.PATH));
+	
 				 filec.setDialogTitle("Choose objectives file");
-				  filec.setCurrentDirectory(new File(textField_1.getText()));
+				
 			
 				 
 				 
@@ -186,7 +195,7 @@ public class GUIMain extends JFrame {
 					// int returnValue = jfc.showSaveDialog(null);
 
 					if (val == JFileChooser.APPROVE_OPTION) {
-						 textField_1.setText(filec.getSelectedFile().getAbsolutePath());
+						 textField_2.setText(filec.getSelectedFile().getAbsolutePath());
 						
 					}
 				 
@@ -201,10 +210,10 @@ public class GUIMain extends JFrame {
 		button_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				 JFileChooser filec = new JFileChooser();
-				 filec.setCurrentDirectory(new File(MCFObfuscator.PATH));
+			
 				 filec.setDialogTitle("Choose output folder");
 				 filec.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			     filec.setCurrentDirectory(new File(textField_3.getText()));
+			    
 				 
 				 
 				 int val = filec.showOpenDialog(null);
@@ -255,13 +264,33 @@ public class GUIMain extends JFrame {
 		scrollPane.setBounds(33, 246, 631, 176);
 		contentPane.add(scrollPane);
 		scrollPane.setViewportView(textArea);
-		textArea.setEditable(false);
+	
 		textArea.setForeground(new Color(255, 255, 255));
 		
 		
 		textArea.setBackground(new Color(47, 79, 79));
 		
 	
+		URL url = null;
+		try {
+			url = new URL("https://cartridge3.lima-city.de/version.txt");
+		} catch (MalformedURLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			Scanner s = new Scanner(url.openStream());
+			if(!s.nextLine().equals(MCFObfuscator.VERSION)) {
+				addToLog("!!! Attention: This version is out to date! Get the latest one from https://github.com/cartridge3/MCFObfuscator/releases");
+			}
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		
+		
+		
 		setTitle("MCFObfuscator");
 	}
 	

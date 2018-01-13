@@ -38,11 +38,10 @@ public class Parser {
 					if(line.startsWith("function")) {
 						String function = mainpath + line.split(" ")[1].replace(MCFObfuscator.PREFIX, "").replace("/", "\\") + ".mcfunction";
 						
-					    MCFObfuscator.LOGGER.log("OKAY NICE " + function);
+					    MCFObfuscator.LOGGER.log("Indexing function \"" + function +"\"");
 						List<String> result = parse(function);
 						
 						for(int i=0;i<result.size();i++) {
-							MCFObfuscator.LOGGER.log("Adding " + result.get(i));
 							cmds.add(result.get(i));
 						}
 						
@@ -61,7 +60,7 @@ public class Parser {
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			MCFObfuscator.LOGGER.err("Error whilest reading input file: Cannot find objectives file. " + e.getMessage());
+			MCFObfuscator.LOGGER.err("!!! Called function doesn't exist !!! " + e.getMessage());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			MCFObfuscator.LOGGER.err("Error whilest reading input file: Failed I/O Operation: " + e.getMessage());

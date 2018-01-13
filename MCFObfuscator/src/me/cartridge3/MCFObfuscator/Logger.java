@@ -1,6 +1,7 @@
 package me.cartridge3.MCFObfuscator;
 
 import javax.swing.SwingUtilities;
+import javax.swing.text.DefaultCaret;
 
 public class Logger {
 
@@ -8,9 +9,24 @@ public class Logger {
 	
 	public void log(Object o) {
 	
+		 SwingUtilities.invokeLater(new Runnable() {
+			    public void run() {
+			    	try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			    	
+			    	
+			    	GUIMain.addToLog(o);
+			    	GUIMain.textArea.setCaretPosition(GUIMain.textArea.getText().length()); 
+			        
+			    }
+			    
+			  });
 		
 		
-		GUIMain.addToLog(o);
 		
 		
 	}

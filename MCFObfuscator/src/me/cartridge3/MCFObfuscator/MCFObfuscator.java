@@ -13,12 +13,15 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class MCFObfuscator {
 
 	protected static final Parser PARSER = new Parser();
 	protected static final Logger LOGGER = new Logger();
+	
+	protected static final String VERSION = "1.0";
 
 	protected static final String PATH = "C:/Users/" + System.getProperty("user.name")
 			+ "/git/MCFObfuscator/MCFObfuscator/src/me/cartridge3/MCFObfuscator/";
@@ -41,18 +44,58 @@ public class MCFObfuscator {
 	protected static List<String> commandList = new ArrayList<String>();
 	public static void start() {
 
-		LOGGER.log("Starting up...");
-		LOGGER.log("Reading objectives...");
-
-		LOGGER.log("Parsing commands");
+	
+	
+     long timebefore = System.currentTimeMillis();
+		LOGGER.log("Parsing commands...");
 
 		List<String> commands = PARSER.parse(IN);
 
 		LOGGER.log("Obfuscating...");
 
+		@SuppressWarnings("unused")
 		List<String> obfCommands = obfuscate(commands);
 
-		LOGGER.log("Done");
+		long timeNeeded = System.currentTimeMillis() - timebefore;
+		
+		LOGGER.log("Exporting objectives.txt");
+		for(Map.Entry<String, String> entry : objectivesMap.entrySet()) {
+		    String key = entry.getKey();
+		    String value = entry.getValue();
+		    
+		    
+		    
+
+		  
+		
+			
+           File f = new File(OUT + "objectives.txt");
+           if(!f.exists()) {
+        	   try {
+				f.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+           }
+           
+           try {
+			Files.write(Paths.get(f.getAbsolutePath()),
+						(key + " -> " + value).getBytes(), StandardOpenOption.APPEND);
+			Files.write(Paths.get(f.getAbsolutePath()),
+					System.lineSeparator().getBytes(), StandardOpenOption.APPEND);
+			
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
+			
+		}
+	
+		
+		LOGGER.log("Done in " + timeNeeded + "ms.");
 
 	}
 
@@ -60,28 +103,31 @@ public class MCFObfuscator {
 
 		int commandCount = commands.size();
 
-		LOGGER.log("Obfuscating objective names");
+		LOGGER.log("Obfuscating strings...");
 
 		List<String> objectives = convertObjectives(OBJECTIVES);
 		List<String> uselessObjectives = new ArrayList<String>();
 		for (int i = 0; i < objectives.size(); i++) {
 
 			objectivesMap.put(objectives.get(i), generateRandomString(1, 6));
+			
 
 		}
+		
+		
 
 		for (int a = 0; a < objectives.size(); a++) {
 			for (int i = 0; i < commandCount; i++) {
 				if (commands.get(i).contains(objectives.get(a))) {
 
 					commands.set(i,
-							commands.get(i).replaceAll(objectives.get(a), objectivesMap.get(objectives.get(i))));
+							commands.get(i).replace(objectives.get(a), objectivesMap.get(objectives.get(a))));
 
 				}
 			}
 		}
 
-		LOGGER.log("Adding useless objectives");
+		LOGGER.log("Adding useless objectives...");
 		Random r = new Random();
 
 		int uselessObjectivesCount = r.nextInt(4) + 4;
@@ -97,7 +143,7 @@ public class MCFObfuscator {
 	
 		
 		
-		LOGGER.log("Confusing flow of control");
+		LOGGER.log("Confusing flow of control...");
 
 		File newFile = null;
 
@@ -130,8 +176,8 @@ public class MCFObfuscator {
 
 			int generatedCase = 0;
 			String cmdToAppend = "";
-			int randomObjective = r.nextInt(objectivesMap.size() - 1);
-			int anotherRandomObjective = r.nextInt(objectivesMap.size() - 1);
+			int randomObjective = r.nextInt(uselessObjectives.size() - 1);
+			int anotherRandomObjective = r.nextInt(uselessObjectives.size() - 1);
 			int randomNumber = r.nextInt(1);
 			int anotherRandomNumber = r.nextInt(20);
 			int reach = r.nextInt(2);
@@ -187,7 +233,7 @@ public class MCFObfuscator {
 					break;
 				case 11:
 					cmdToAppend = "scoreboard players set @e[score_" + uselessObjectives.get(randomObjective) + "="
-							+ uselessObjectives.get(anotherRandomObjective) + "] " + randomNumber;
+							+ r.nextInt(30) + "] " + uselessObjectives.get(anotherRandomObjective) + " " + randomNumber;
 					break;
 
 				case 12:
@@ -231,7 +277,7 @@ public class MCFObfuscator {
 							+ "_min=1] " + uselessObjectives.get(anotherRandomObjective) + " " + anotherRandomNumber;
 					break;
 				case 21:
-					cmdToAppend = "scoreboard players set @e[score_" + uselessObjectives.get(randomObjective) + "=1]"
+					cmdToAppend = "scoreboard players set @e[score_" + uselessObjectives.get(randomObjective) + "=1] "
 							+ uselessObjectives.get(anotherRandomObjective) + " " + anotherRandomNumber;
 					break;
 				case 22:
@@ -312,7 +358,7 @@ public class MCFObfuscator {
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			LOGGER.err("Error whilest reading objectives file: Cannot find objectives file.");
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			LOGGER.err("Error whilest reading objectives file: Failed I/O Operation: " + e.getMessage());
